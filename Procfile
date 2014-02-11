@@ -1,1 +1,1 @@
-eucker: bin/hubot -a campfire -n eucker
+app: bin/hubot -a campfire -n eucker
