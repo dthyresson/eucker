@@ -8,7 +8,7 @@
 #   ESPN_API_KEY from ESPN
 #
 # Commands:
-#   hubot sport me now  - show espn now feed
+#   hubot eucker now  - show espn now feed
 #
 
 espn = require 'espn'
@@ -23,19 +23,19 @@ espn_now_top = (msg, err, json) ->
 
 module.exports = (robot) ->
 
-  robot.respond /sport me now/i, (msg) ->
+  robot.respond /eucker now/i, (msg) ->
     espn_now msg, (err, json) ->
       feed = json.feed
       item = msg.random feed
-      msg.send item.headline
+      msg.send "#{item.headline} #{item.url}"
 
-  robot.respond /sport me top/i, (msg) ->
+  robot.respond /eucker top/i, (msg) ->
     espn_now_top msg, (err, json) ->
       feed = json.feed
       item = msg.random feed
-      msg.send item.headline
+      msg.send "#{item.headline} #{item.url}"
 
-  robot.respond /sport me image/i, (msg) ->
+  robot.respond /eucker image/i, (msg) ->
     espn_now_top msg, (err, json) ->
       feed = json.feed
       item = msg.random feed
