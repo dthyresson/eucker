@@ -23,17 +23,17 @@ espn_now_top = (msg, err, json) ->
 
 module.exports = (robot) ->
 
-  robot.respond /eucker now/i, (msg) ->
+  robot.respond /eucker read me now/i, (msg) ->
     espn_now msg, (err, json) ->
       feed = json.feed
       item = msg.random feed
-      msg.send "#{item.headline} #{item.url}"
+      msg.send "#{item.headline} Read: #{item.links.web.href}"
 
-  robot.respond /eucker top/i, (msg) ->
+  robot.respond /eucker read me top/i, (msg) ->
     espn_now_top msg, (err, json) ->
       feed = json.feed
       item = msg.random feed
-      msg.send "#{item.headline} #{item.url}"
+      msg.send "#{item.headline} Read: #{item.links.web.href}"
 
   robot.respond /eucker image/i, (msg) ->
     espn_now_top msg, (err, json) ->
