@@ -31,18 +31,20 @@ module.exports = (robot) ->
       feed = json.feed
       item = msg.random feed
       image = msg.random item.images
-      msg.send "#{image.url} #{item.headline} - Read: #{item.links.web.href}"
+      msg.send "#{image.url}"
+      msg.send #{item.headline} - Read: #{item.links.web.href}"
 
   robot.respond /eucker top/i, (msg) ->
     espn_now_top msg, (err, json) ->
       feed = json.feed
       item = msg.random feed
-      image = msg.random item.images
-      msg.send "#{image.url} #{item.headline} - Read: #{item.links.web.href}"
+      msg.send "#{image.url}"
+      msg.send #{item.headline} - Read: #{item.links.web.href}"
 
   robot.respond /eucker popular/i, (msg) ->
     espn_now_popular msg, (err, json) ->
       feed = json.feed
       item = msg.random feed
       image = msg.random item.images
-      msg.send "#{image.url} #{item.headline} - Read: #{item.links.web.href}"
+      msg.send "#{image.url}"
+      msg.send #{item.headline} - Read: #{item.links.web.href}"
