@@ -21,23 +21,28 @@ espn_now = (msg, err, json) ->
 espn_now_top = (msg, err, json) ->
   espn.nowTop(err, json)
 
+espn_now_popular = (msg, err, json) ->
+  espn.nowPopular(err, json)
+
 module.exports = (robot) ->
 
-  robot.respond /eucker read me now/i, (msg) ->
+  robot.respond /eucker headline/i, (msg) ->
     espn_now msg, (err, json) ->
       feed = json.feed
       item = msg.random feed
-      msg.send "#{item.headline} Read: #{item.links.web.href}"
+      image = msg.random item.images
+      msg.send "#{image.url} #{item.headline} - Read: #{item.links.web.href}"
 
-  robot.respond /eucker read me top/i, (msg) ->
-    espn_now_top msg, (err, json) ->
-      feed = json.feed
-      item = msg.random feed
-      msg.send "#{item.headline} Read: #{item.links.web.href}"
-
-  robot.respond /eucker image/i, (msg) ->
+  robot.respond /eucker top/i, (msg) ->
     espn_now_top msg, (err, json) ->
       feed = json.feed
       item = msg.random feed
       image = msg.random item.images
-      msg.send image.url
+      msg.send "#{image.url} #{item.headline} - Read: #{item.links.web.href}"
+
+  robot.respond /eucker popular/i, (msg) ->
+    espn_now_popular msg, (err, json) ->
+      feed = json.feed
+      item = msg.random feed
+      image = msg.random item.images
+      msg.send "#{image.url} #{item.headline} - Read: #{item.links.web.href}"
