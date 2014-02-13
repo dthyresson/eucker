@@ -8,43 +8,32 @@
 #   ESPN_API_KEY from ESPN
 #
 # Commands:
-#   hubot eucker now  - show espn now feed
-#
+#   hubot eucker feed now
+#   hubot eucker feed now (boxing|college-football|golf|mens-college-basketball|mlb|mma|nascar|nba|nfl|nhl|olympics|racing|soccer|tennis|wnba|womens-college-basketball)
+#   hubot eucker feed top
+#   hubot eucker feed popular
 
-espn = require 'espn'
-
-espn.setApiKey process.env.ESPN_API_KEY
-
-espn_now = (msg, err, json) ->
-  espn.now(err, json)
-
-espn_now_top = (msg, err, json) ->
-  espn.nowTop(err, json)
-
-espn_now_popular = (msg, err, json) ->
-  espn.nowPopular(err, json)
+espn = require('espn').setApiKey process.env.ESPN_API_KEY
 
 module.exports = (robot) ->
 
-  robot.respond /eucker headline/i, (msg) ->
-    espn_now msg, (err, json) ->
-      feed = json.feed
-      item = msg.random feed
-      image = msg.random item.images
-      msg.send "#{image.url}"
-      msg.send #{item.headline} - Read: #{item.links.web.href}"
+  robot.respond /eucker feed now\s?(boxing|college-football|golf|mens-college-basketball|mlb|mma|nascar|nba|nfl|nhl|olympics|racing|soccer|tennis|wnba|womens-college-basketball)*$/i, (msg) ->
 
-  robot.respond /eucker top/i, (msg) ->
-    espn_now_top msg, (err, json) ->
-      feed = json.feed
-      item = msg.random feed
-      msg.send "#{image.url}"
-      msg.send #{item.headline} - Read: #{item.links.web.href}"
+    options =
+      leagues: msg.match[1]
 
-  robot.respond /eucker popular/i, (msg) ->
-    espn_now_popular msg, (err, json) ->
-      feed = json.feed
-      item = msg.random feed
-      image = msg.random item.images
-      msg.send "#{image.url}"
-      msg.send #{item.headline} - Read: #{item.links.web.href}"
+    espn.now options, (err, json) ->
+      msg.send headline msg.random json.feed
+
+  robot.respond /eucker feed top$/i, (msg) ->
+    options = []
+    espn.nowTop options, (err, json) ->
+      msg.send headline msg.random json.feed
+
+  robot.respond /eucker feed popular$/i, (msg) ->
+    options = []
+    espn.nowPopular options, (err, json) ->
+      msg.send headline msg.random json.feed
+
+headline = (item) ->
+  "#{item.headline}\n#{item.links.web.href}"
