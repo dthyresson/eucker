@@ -153,10 +153,14 @@ team_hash = [
             ]
 
 master_scoreboard_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/master_scoreboard.json"
+miniscoreboard_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/miniscoreboard.json"
+
 linescore_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/{{gid}}/linescore.json"
 boxscore_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/{{gid}}/boxscore.json"
 game_events_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/{{gid}}/game_events.json"
 
+home_team_wins_template = "{{home_team_name}} beat the {{away_team_name}} {{home_team_runs}}-{{away_team_runs}}"
+away_team_wins_template = "{{away_team_name}} beat the {{home_team_name}} {{away_team_runs}}-{{home_team_runs}}"
 
 game_events_description_template =  """
                                     \n
@@ -188,6 +192,16 @@ module.exports = (robot) ->
     game_data_directory msg, gameday_date, team, (gid) ->
       msg.send gid
 
+  robot.respond /master_scoreboard (yesterday|today|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
+    gameday_date = human_to_gameday_date msg.match[1]
+    master_scoreboard_data msg, gameday_date, (master_scoreboard) ->
+      msg.send JSON.stringify(master_scoreboard)
+
+  robot.respond /miniscoreboard (yesterday|today|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
+    gameday_date = human_to_gameday_date msg.match[1]
+    miniscoreboard_data msg, gameday_date, (miniscoreboard) ->
+      msg.send JSON.stringify(miniscoreboard)
+
   robot.respond /linescore ([a-zA-Z\s]+) (yesterday|today|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
     team = msg.match[1]
     gameday_date = human_to_gameday_date msg.match[2]
@@ -204,7 +218,23 @@ module.exports = (robot) ->
     team = msg.match[1]
     gameday_date = human_to_gameday_date msg.match[2]
     gameday_game_events_data msg, gameday_date, team, (game_events) ->
-      msg.send mustache.render(game_events_description_template, game_events.data.game)
+      msg.send mustache.render(game_events_description_template, game_events.game)
+
+  robot.respond /score ([a-zA-Z\s]+) (yesterday|today|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
+    team = msg.match[1]
+    gameday_date = human_to_gameday_date msg.match[2]
+    miniscoreboard_game_data msg, gameday_date, team, (game) ->
+      home_team_runs = game.home_team_runs
+      away_team_runs = game.away_team_runs
+      if home_team_runs > away_team_runs
+        msg.send mustache.render(home_team_wins_template, game)
+      else
+        msg.send mustache.render(away_team_wins_template, game)
+
+human_to_gameday_date = (text) ->
+  date_obj = chrono.parse text
+  date = moment(date_obj[0].startDate)
+  {year: date.format("YYYY"), month: date.format("MM"), day: date.format("DD"), gid: ''}
 
 gameday_game_events_data = (msg, gameday_date, team, game_events) ->
   game_data_directory msg, gameday_date, team, (gid) ->
@@ -212,7 +242,7 @@ gameday_game_events_data = (msg, gameday_date, team, game_events) ->
     game_events_url = mustache.render(game_events_url_template, gameday_date)
     msg.http(game_events_url)
       .get() (err, res, body) ->
-        game_events JSON.parse(body)
+        game_events JSON.parse(body).data
 
 gameday_linescore_data = (msg, gameday_date, team, linescore) ->
   game_data_directory msg, gameday_date, team, (gid) ->
@@ -220,7 +250,7 @@ gameday_linescore_data = (msg, gameday_date, team, linescore) ->
     linescore_url = mustache.render(linescore_url_template, gameday_date)
     msg.http(linescore_url)
       .get() (err, res, body) ->
-        linescore JSON.parse(body)
+        linescore JSON.parse(body).data
 
 gameday_boxscore_data = (msg, gameday_date, team, boxscore) ->
   game_data_directory msg, gameday_date, team, (gid) ->
@@ -228,27 +258,36 @@ gameday_boxscore_data = (msg, gameday_date, team, boxscore) ->
     boxscore_url = mustache.render(boxscore_url_template, gameday_date)
     msg.http(boxscore_url)
       .get() (err, res, body) ->
-        boxscore JSON.parse(body)
+        boxscore JSON.parse(body).data
 
-human_to_gameday_date = (text) ->
-  date_obj = chrono.parse text
-  date = moment(date_obj[0].startDate)
-  {year: date.format("YYYY"), month: date.format("MM"), day: date.format("DD"), gid: ''}
-
-game_data_directory = (msg, gameday_date, team, gid) ->
+master_scoreboard_data = (msg, gameday_date, scoreboard) ->
   master_scoreboard_url = mustache.render(master_scoreboard_url_template, gameday_date)
   msg.http(master_scoreboard_url)
     .get() (err, res, body) ->
-      scoreboard = JSON.parse(body)
-      team_code = mlb_team_code team
-      game = game_for_team_code scoreboard, team_code
-      gid game.game_data_directory.match(/(gid\w*)$/i)[0]
+      scoreboard JSON.parse(body).data
+
+miniscoreboard_data = (msg, gameday_date, scoreboard) ->
+  miniscoreboard_url = mustache.render(miniscoreboard_url_template, gameday_date)
+  msg.http(miniscoreboard_url)
+    .get() (err, res, body) ->
+      scoreboard JSON.parse(body).data
+
+miniscoreboard_game_data = (msg, gameday_date, team, game) ->
+  miniscoreboard_data msg, gameday_date, (scoreboard) ->
+    team_code = mlb_team_code team
+    game game_for_team_code scoreboard, team_code
+
+game_data_directory = (msg, gameday_date, team, gid) ->
+  master_scoreboard_data msg, gameday_date, (scoreboard) ->
+    team_code = mlb_team_code team
+    game = game_for_team_code scoreboard, team_code
+    gid game.game_data_directory.match(/(gid\w*)$/i)[0]
 
 mlb_team_code = (team) ->
   team_attributes = _.find(team_hash, {nickname: team.toLowerCase()}) or _.find(team_hash, {abbreviation: team.toLowerCase()}) or _.find(team_hash, {name: team.toLowerCase()}) or _.find(team_hash, {location: team.toLowerCase()})
   team_attributes.code
 
 game_for_team_code = (scoreboard, team_code) ->
-  home_team_game = _.find(scoreboard.data.games.game, { 'home_code': team_code })
-  away_team_game = _.find(scoreboard.data.games.game, { 'away_code': team_code })
+  home_team_game = _.find(scoreboard.games.game, { 'home_code': team_code })
+  away_team_game = _.find(scoreboard.games.game, { 'away_code': team_code })
   home_team_game or away_team_game
