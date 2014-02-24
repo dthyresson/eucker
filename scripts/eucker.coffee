@@ -59,8 +59,8 @@ module.exports = (robot) ->
         'home_inning_runs'
       else
         'away_inning_runs'
-      # msg.send JSON.stringify _.map(linescore.game.linescore, inning_runs_attribute)
-      msg.send tablify humanize_linescore_data linescore.game.linescore
+      humanized_linescore =  humanize_linescore linescore.game
+      msg.send tablify humanized_linescore, {show_index: false, keys: ['INNING', linescore.game.home_name_abbrev, linescore.game.away_name_abbrev]}
 
   # Random video highlight for a date
   # Usage: hubot highlights October 8th 2013
@@ -251,8 +251,35 @@ is_away_team = (data, team_code) ->
 large_thumbnail = (thumbnail) ->
   "#{thumbnail}".replace /_\d+.jpg/, "_43.jpg"
 
-humanize_linescore_data = (linescore_data) ->
-  linescore_data
+# lines score with team names
+humanize_linescore = (linescore_data) ->
+  humanized_linescore = []
+  _.forEach linescore_data.linescore, (inning_line) ->
+    i = {}
+    i[linescore_data.away_name_abbrev] = inning_line.away_inning_runs
+    i[linescore_data.home_name_abbrev] = inning_line.home_inning_runs
+    i['INNING'] = inning_line.inning
+    humanized_linescore.push i
+
+  hits = {}
+  hits['INNING'] = 'Hits'
+  hits[linescore_data.away_name_abbrev] = linescore_data.away_team_hits
+  hits[linescore_data.home_name_abbrev] = linescore_data.home_team_hits
+  humanized_linescore.push hits
+
+  runs = {}
+  runs['INNING'] = 'Runs'
+  runs[linescore_data.away_name_abbrev] = linescore_data.away_team_runs
+  runs[linescore_data.home_name_abbrev] = linescore_data.home_team_runs
+  humanized_linescore.push runs
+
+  errors = {}
+  errors['INNING'] = 'Errors'
+  errors[linescore_data.away_name_abbrev] = linescore_data.away_team_errors
+  errors[linescore_data.home_name_abbrev] = linescore_data.home_team_errors
+  humanized_linescore.push errors
+
+  humanized_linescore
 
 mlb_teams = ///
 (
