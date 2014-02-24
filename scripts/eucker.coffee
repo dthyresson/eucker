@@ -146,11 +146,37 @@ BOS
 ///i
 
 
-team_hash = [
-              {code: 'mia', nickname: 'marlins', name: "miami marlins", location: 'miami', abbreviation: 'mia'},
-              {code: 'myn', nickname: 'mets', name: "new york mets", location: 'new york', abbreviation: 'nym'},
-              {code: 'det', nickname: 'tigers', name: "detroit tigers", location: 'detroit', abbreviation: 'det'}
-              {code: 'bos', nickname: 'red sox', name: "boston red sox", location: 'boston', abbreviation: 'bos'}
+gameday_team_lookup = [
+              {code: 'lan', nickname: 'dodgers', name: 'los angeles dodgers', location: 'los angeles', abbreviation: 'los'},
+              {code: 'ana', nickname: 'angels', name: 'los angeles angels', location: 'los angeles', abbreviation: 'ana'},
+              {code: 'tex', nickname: 'rangers', name: 'texas rangers', location: 'texas', abbreviation: 'tex'},
+              {code: 'sfn', nickname: 'giants', name: 'san francisco giants', location: 'san francisco', abbreviation: 'sfg'},
+              {code: 'kca', nickname: 'royals', name: 'kansas city royals', location: 'kansas city', abbreviation: 'kan'},
+              {code: 'mil', nickname: 'brewers', name: 'milwaukee brewers', location: 'milwaukee', abbreviation: 'mil'},
+              {code: 'stl', nickname: 'cardinals', name: 'st. louis cardinals', location: 'st. louis', abbreviation: 'stl'},
+              {code: 'col', nickname: 'rockies', name: 'colorado rockies', location: 'colorado', abbreviation: 'col'},
+              {code: 'tor', nickname: 'blue jays', name: 'toronto blue jays', location: 'toronto', abbreviation: 'tor'},
+              {code: 'hou', nickname: 'astros', name: 'houston astros', location: 'houston', abbreviation: 'hou'},
+              {code: 'nyn', nickname: 'mets', name: 'new york mets', location: 'new york', abbreviation: 'nym'},
+              {code: 'cha', nickname: 'white sox', name: 'chicago white sox', location: 'chicago', abbreviation: 'cws'},
+              {code: 'sdn', nickname: 'padres', name: 'san diego padres', location: 'san diego', abbreviation: 'sdp'},
+              {code: 'det', nickname: 'tigers', name: 'detroit tigers', location: 'detroit', abbreviation: 'det'},
+              {code: 'min', nickname: 'twins', name: 'minnesota twins', location: 'minnesota', abbreviation: 'min'},
+              {code: 'cin', nickname: 'reds', name: 'cincinnati reds', location: 'cincinnati', abbreviation: 'cin'},
+              {code: 'pit', nickname: 'pirates', name: 'pittsburgh pirates', location: 'pittsburgh', abbreviation: 'pit'},
+              {code: 'chn', nickname: 'cubs', name: 'chicago cubs', location: 'chicago', abbreviation: 'chc'},
+              {code: 'sea', nickname: 'mariners', name: 'seattle mariners', location: 'seattle', abbreviation: 'sea'},
+              {code: 'atl', nickname: 'braves', name: 'atlanta braves', location: 'atlanta', abbreviation: 'atl'},
+              {code: 'ari', nickname: 'diamondbacks', name: 'arizona diamondbacks', location: 'arizona', abbreviation: 'ari'},
+              {code: 'bal', nickname: 'orioles', name: 'baltimore orioles', location: 'baltimore', abbreviation: 'bal'},
+              {code: 'cle', nickname: 'indians', name: 'cleveland indians', location: 'cleveland', abbreviation: 'cle'},
+              {code: 'mia', nickname: 'marlins', name: 'miami marlins', location: 'miami', abbreviation: 'mia'},
+              {code: 'oak', nickname: 'athletics', name: 'oakland athletics', location: 'oakland', abbreviation: 'oak'},
+              {code: 'phi', nickname: 'phillies', name: 'philadelphia phillies', location: 'philadelphia', abbreviation: 'phi'},
+              {code: 'was', nickname: 'nationals', name: 'washington nationals', location: 'washington', abbreviation: 'was'},
+              {code: 'tba', nickname: 'rays', name: 'tampa bay rays', location: 'tampa bay', abbreviation: 'tam'},
+              {code: 'nya', nickname: 'yankees', name: 'new york yankees', location: 'new york', abbreviation: 'nyy'},
+              {code: 'bos', nickname: 'red sox', name: 'boston red sox', location: 'boston', abbreviation: 'bos'}
             ]
 
 # URL Templates
@@ -395,7 +421,7 @@ game_data_directory = (msg, gameday_date, team, gid) ->
 
 # Translates a human expression of a team (Red Sox, Boston, Boston Red Sox, BOS) into the Gameday Team Code
 mlb_team_code = (team) ->
-  team_attributes = _.find(team_hash, {nickname: team.toLowerCase()}) or _.find(team_hash, {abbreviation: team.toLowerCase()}) or _.find(team_hash, {name: team.toLowerCase()}) or _.find(team_hash, {location: team.toLowerCase()})
+  team_attributes = _.find(gameday_team_lookup, {nickname: team.toLowerCase()}) or _.find(gameday_team_lookup, {abbreviation: team.toLowerCase()}) or _.find(gameday_team_lookup, {name: team.toLowerCase()}) or _.find(gameday_team_lookup, {location: team.toLowerCase()})
   team_attributes.code
 
 # Given Gameday scoreboard game data, find the one played by the requested team
