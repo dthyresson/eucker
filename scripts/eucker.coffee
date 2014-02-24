@@ -19,202 +19,6 @@ chrono = require('chrono-node')
 
 {wait, repeat, doAndRepeat, waitUntil} = require 'wait'
 
-mlb_teams = ///
-(
-Dodgers|                    # nicknames
-Angels|
-Rangers|
-Giants|
-Royals|
-Brewers|
-Cardinals|
-Rockies|
-Blue\x20Jays|
-Astros|
-Mets|
-White\x20Sox|
-Padres|
-Tigers|
-Twins|
-Reds|
-Pirates|
-Cubs|
-Mariners|
-Braves|
-Diamondbacks|
-Orioles|
-Indians|
-Marlins|
-Athletics|
-Phillies|
-Nationals|
-Rays|
-Yankees|
-Red\x20Sox|
-Losx20Angelesx20Dodgers|    #full team names
-Losx20Angelesx20Angels|
-Texasx20Rangers|
-Sanx20Franciscox20Giants|
-Kansasx20Cityx20Royals|
-Milwaukeex20Brewers|
-St.x20Louisx20Cardinals|
-Stx20Louisx20Cardinals|
-Saintx20Louisx20Cardinals|
-Coloradox20Rockies|
-Torontox20Bluex20Jays|
-Houstonx20Astros|
-Newx20Yorkx20Mets|
-Chicagox20Whitex20Sox|
-Sanx20Diegox20Padres|
-Detroitx20Tigers|
-Minnesotax20Twins|
-Cincinnatix20Reds|
-Pittsburghx20Pirates|
-Chicagox20Cubs|
-Seattlex20Mariners|
-Atlantax20Braves|
-Arizonax20Diamondbacks|
-Baltimorex20Orioles|
-Clevelandx20Indians|
-Miamix20Marlins|
-Oaklandx20Athletics|
-Philadelphiax20Phillies|
-Washingtonx20Nationals|
-Tampax20Bayx20Rays|
-Newx20Yorkx20Yankees|
-Bostonx20Redx20Sox|
-Losx20Angeles|            # locations/cities
-Texas|
-Sanx20Francisco|
-Kansasx20City|
-Milwaukee|
-Stx20Louis|
-St.x20Louis|
-Saintx20Louis|
-Colorado|
-Toronto|
-Houston|
-Newx20York|
-Chicago|
-Sanx20Diego|
-Detroit|
-Minnesota|
-Cincinnati|
-Pittsburgh|
-Seattle|
-Atlanta|
-Arizona|
-Baltimore|
-Cleveland|
-Miami|
-Oakland|
-Philadelphia|
-Washington|
-Tampax20Bay|
-Boston|
-LOS|                        # abbreviations
-ANA|
-TEX|
-SFG|
-KAN|
-MIL|
-STL|
-COL|
-TOR|
-HOU|
-NYM|
-CWS|
-SDP|
-DET|
-MIN|
-CIN|
-PIT|
-CHC|
-SEA|
-ATL|
-ARI|
-BAL|
-CLE|
-MIA|
-OAK|
-PHI|
-WAS|
-TAM|
-NYY|
-BOS
-)
-///i
-
-
-gameday_team_lookup = [
-              {code: 'lan', nickname: 'dodgers', name: 'los angeles dodgers', location: 'los angeles', abbreviation: 'los'},
-              {code: 'ana', nickname: 'angels', name: 'los angeles angels', location: 'los angeles', abbreviation: 'ana'},
-              {code: 'tex', nickname: 'rangers', name: 'texas rangers', location: 'texas', abbreviation: 'tex'},
-              {code: 'sfn', nickname: 'giants', name: 'san francisco giants', location: 'san francisco', abbreviation: 'sfg'},
-              {code: 'kca', nickname: 'royals', name: 'kansas city royals', location: 'kansas city', abbreviation: 'kan'},
-              {code: 'mil', nickname: 'brewers', name: 'milwaukee brewers', location: 'milwaukee', abbreviation: 'mil'},
-              {code: 'stl', nickname: 'cardinals', name: 'st. louis cardinals', location: 'st. louis', abbreviation: 'stl'},
-              {code: 'col', nickname: 'rockies', name: 'colorado rockies', location: 'colorado', abbreviation: 'col'},
-              {code: 'tor', nickname: 'blue jays', name: 'toronto blue jays', location: 'toronto', abbreviation: 'tor'},
-              {code: 'hou', nickname: 'astros', name: 'houston astros', location: 'houston', abbreviation: 'hou'},
-              {code: 'nyn', nickname: 'mets', name: 'new york mets', location: 'new york', abbreviation: 'nym'},
-              {code: 'cha', nickname: 'white sox', name: 'chicago white sox', location: 'chicago', abbreviation: 'cws'},
-              {code: 'sdn', nickname: 'padres', name: 'san diego padres', location: 'san diego', abbreviation: 'sdp'},
-              {code: 'det', nickname: 'tigers', name: 'detroit tigers', location: 'detroit', abbreviation: 'det'},
-              {code: 'min', nickname: 'twins', name: 'minnesota twins', location: 'minnesota', abbreviation: 'min'},
-              {code: 'cin', nickname: 'reds', name: 'cincinnati reds', location: 'cincinnati', abbreviation: 'cin'},
-              {code: 'pit', nickname: 'pirates', name: 'pittsburgh pirates', location: 'pittsburgh', abbreviation: 'pit'},
-              {code: 'chn', nickname: 'cubs', name: 'chicago cubs', location: 'chicago', abbreviation: 'chc'},
-              {code: 'sea', nickname: 'mariners', name: 'seattle mariners', location: 'seattle', abbreviation: 'sea'},
-              {code: 'atl', nickname: 'braves', name: 'atlanta braves', location: 'atlanta', abbreviation: 'atl'},
-              {code: 'ari', nickname: 'diamondbacks', name: 'arizona diamondbacks', location: 'arizona', abbreviation: 'ari'},
-              {code: 'bal', nickname: 'orioles', name: 'baltimore orioles', location: 'baltimore', abbreviation: 'bal'},
-              {code: 'cle', nickname: 'indians', name: 'cleveland indians', location: 'cleveland', abbreviation: 'cle'},
-              {code: 'mia', nickname: 'marlins', name: 'miami marlins', location: 'miami', abbreviation: 'mia'},
-              {code: 'oak', nickname: 'athletics', name: 'oakland athletics', location: 'oakland', abbreviation: 'oak'},
-              {code: 'phi', nickname: 'phillies', name: 'philadelphia phillies', location: 'philadelphia', abbreviation: 'phi'},
-              {code: 'was', nickname: 'nationals', name: 'washington nationals', location: 'washington', abbreviation: 'was'},
-              {code: 'tba', nickname: 'rays', name: 'tampa bay rays', location: 'tampa bay', abbreviation: 'tam'},
-              {code: 'nya', nickname: 'yankees', name: 'new york yankees', location: 'new york', abbreviation: 'nyy'},
-              {code: 'bos', nickname: 'red sox', name: 'boston red sox', location: 'boston', abbreviation: 'bos'}
-            ]
-
-# URL Templates
-master_scoreboard_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/master_scoreboard.json"
-miniscoreboard_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/miniscoreboard.json"
-
-linescore_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/{{gid}}/linescore.json"
-boxscore_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/{{gid}}/boxscore.json"
-game_events_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/{{gid}}/game_events.json"
-game_highlights_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/{{gid}}/media/highlights.xml"
-
-highlights_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/media/highlights.xml"
-
-home_team_wins_template = "{{home_team_name}} beat the {{away_team_name}} {{home_team_runs}}-{{away_team_runs}} at {{venue}} on {{{original_date}}}"
-away_team_wins_template = "{{away_team_name}} beat the {{home_team_name}} {{away_team_runs}}-{{home_team_runs}} at {{venue}} on {{{original_date}}}"
-
-# View Templates
-game_events_description_template =  """
-                                    \n
-                                    {{#inning}}
-                                    \n
-                                    Bottom of the {{num}}
-                                    {{#bottom}}
-                                    {{#atbat}}
-                                    * {{des}}
-                                    {{/atbat}}
-                                    {{/bottom}}
-                                    \n
-                                    Top of the {{num}}
-                                    {{#top}}
-                                    {{#atbat}}
-                                    * {{des}}
-                                    {{/atbat}}
-                                    {{/top}}
-                                    \n
-                                    {{/inning}}
-                                    \n
-                                    """
 # Eucker Bot!
 module.exports = (robot) ->
 
@@ -440,7 +244,203 @@ is_away_team = (data, team_code) ->
   code = _.pluck(data, 'away_code')
   _.contains(code, mlb_team_code team_code)
 
-# Given any Gameday thumbail image url, return the large thumbnail image url. Note: Gameday appears to store thumbnail images in a variety of size: 6, 7, 22, 43
+# Given any Gameday thumbail image url, return the large thumbnail image url. Note: Gameday appears to store thumbnail images in a variety of sizes: 6, 7, 8, 22, 43
 large_thumbnail = (thumbnail) ->
   "#{thumbnail}".replace /_\d+.jpg/, "_43.jpg"
 
+mlb_teams = ///
+(
+Dodgers|                    # nicknames
+Angels|
+Rangers|
+Giants|
+Royals|
+Brewers|
+Cardinals|
+Rockies|
+Blue\x20Jays|
+Astros|
+Mets|
+White\x20Sox|
+Padres|
+Tigers|
+Twins|
+Reds|
+Pirates|
+Cubs|
+Mariners|
+Braves|
+Diamondbacks|
+Orioles|
+Indians|
+Marlins|
+Athletics|
+Phillies|
+Nationals|
+Rays|
+Yankees|
+Red\x20Sox|
+Losx20Angelesx20Dodgers|    #full team names
+Losx20Angelesx20Angels|
+Texasx20Rangers|
+Sanx20Franciscox20Giants|
+Kansasx20Cityx20Royals|
+Milwaukeex20Brewers|
+St.x20Louisx20Cardinals|
+Stx20Louisx20Cardinals|
+Saintx20Louisx20Cardinals|
+Coloradox20Rockies|
+Torontox20Bluex20Jays|
+Houstonx20Astros|
+Newx20Yorkx20Mets|
+Chicagox20Whitex20Sox|
+Sanx20Diegox20Padres|
+Detroitx20Tigers|
+Minnesotax20Twins|
+Cincinnatix20Reds|
+Pittsburghx20Pirates|
+Chicagox20Cubs|
+Seattlex20Mariners|
+Atlantax20Braves|
+Arizonax20Diamondbacks|
+Baltimorex20Orioles|
+Clevelandx20Indians|
+Miamix20Marlins|
+Oaklandx20Athletics|
+Philadelphiax20Phillies|
+Washingtonx20Nationals|
+Tampax20Bayx20Rays|
+Newx20Yorkx20Yankees|
+Bostonx20Redx20Sox|
+Losx20Angeles|            # locations/cities
+Texas|
+Sanx20Francisco|
+Kansasx20City|
+Milwaukee|
+Stx20Louis|
+St.x20Louis|
+Saintx20Louis|
+Colorado|
+Toronto|
+Houston|
+Newx20York|
+Chicago|
+Sanx20Diego|
+Detroit|
+Minnesota|
+Cincinnati|
+Pittsburgh|
+Seattle|
+Atlanta|
+Arizona|
+Baltimore|
+Cleveland|
+Miami|
+Oakland|
+Philadelphia|
+Washington|
+Tampax20Bay|
+Boston|
+LOS|                        # abbreviations
+ANA|
+TEX|
+SFG|
+KAN|
+MIL|
+STL|
+COL|
+TOR|
+HOU|
+NYM|
+CWS|
+SDP|
+DET|
+MIN|
+CIN|
+PIT|
+CHC|
+SEA|
+ATL|
+ARI|
+BAL|
+CLE|
+MIA|
+OAK|
+PHI|
+WAS|
+TAM|
+NYY|
+BOS
+)
+///i
+
+
+gameday_team_lookup = [
+              {code: 'lan', nickname: 'dodgers', name: 'los angeles dodgers', location: 'los angeles', abbreviation: 'los'},
+              {code: 'ana', nickname: 'angels', name: 'los angeles angels', location: 'los angeles', abbreviation: 'ana'},
+              {code: 'tex', nickname: 'rangers', name: 'texas rangers', location: 'texas', abbreviation: 'tex'},
+              {code: 'sfn', nickname: 'giants', name: 'san francisco giants', location: 'san francisco', abbreviation: 'sfg'},
+              {code: 'kca', nickname: 'royals', name: 'kansas city royals', location: 'kansas city', abbreviation: 'kan'},
+              {code: 'mil', nickname: 'brewers', name: 'milwaukee brewers', location: 'milwaukee', abbreviation: 'mil'},
+              {code: 'stl', nickname: 'cardinals', name: 'st. louis cardinals', location: 'st. louis', abbreviation: 'stl'},
+              {code: 'col', nickname: 'rockies', name: 'colorado rockies', location: 'colorado', abbreviation: 'col'},
+              {code: 'tor', nickname: 'blue jays', name: 'toronto blue jays', location: 'toronto', abbreviation: 'tor'},
+              {code: 'hou', nickname: 'astros', name: 'houston astros', location: 'houston', abbreviation: 'hou'},
+              {code: 'nyn', nickname: 'mets', name: 'new york mets', location: 'new york', abbreviation: 'nym'},
+              {code: 'cha', nickname: 'white sox', name: 'chicago white sox', location: 'chicago', abbreviation: 'cws'},
+              {code: 'sdn', nickname: 'padres', name: 'san diego padres', location: 'san diego', abbreviation: 'sdp'},
+              {code: 'det', nickname: 'tigers', name: 'detroit tigers', location: 'detroit', abbreviation: 'det'},
+              {code: 'min', nickname: 'twins', name: 'minnesota twins', location: 'minnesota', abbreviation: 'min'},
+              {code: 'cin', nickname: 'reds', name: 'cincinnati reds', location: 'cincinnati', abbreviation: 'cin'},
+              {code: 'pit', nickname: 'pirates', name: 'pittsburgh pirates', location: 'pittsburgh', abbreviation: 'pit'},
+              {code: 'chn', nickname: 'cubs', name: 'chicago cubs', location: 'chicago', abbreviation: 'chc'},
+              {code: 'sea', nickname: 'mariners', name: 'seattle mariners', location: 'seattle', abbreviation: 'sea'},
+              {code: 'atl', nickname: 'braves', name: 'atlanta braves', location: 'atlanta', abbreviation: 'atl'},
+              {code: 'ari', nickname: 'diamondbacks', name: 'arizona diamondbacks', location: 'arizona', abbreviation: 'ari'},
+              {code: 'bal', nickname: 'orioles', name: 'baltimore orioles', location: 'baltimore', abbreviation: 'bal'},
+              {code: 'cle', nickname: 'indians', name: 'cleveland indians', location: 'cleveland', abbreviation: 'cle'},
+              {code: 'mia', nickname: 'marlins', name: 'miami marlins', location: 'miami', abbreviation: 'mia'},
+              {code: 'oak', nickname: 'athletics', name: 'oakland athletics', location: 'oakland', abbreviation: 'oak'},
+              {code: 'phi', nickname: 'phillies', name: 'philadelphia phillies', location: 'philadelphia', abbreviation: 'phi'},
+              {code: 'was', nickname: 'nationals', name: 'washington nationals', location: 'washington', abbreviation: 'was'},
+              {code: 'tba', nickname: 'rays', name: 'tampa bay rays', location: 'tampa bay', abbreviation: 'tam'},
+              {code: 'nya', nickname: 'yankees', name: 'new york yankees', location: 'new york', abbreviation: 'nyy'},
+              {code: 'bos', nickname: 'red sox', name: 'boston red sox', location: 'boston', abbreviation: 'bos'}
+            ]
+
+# URL Templates
+master_scoreboard_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/master_scoreboard.json"
+miniscoreboard_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/miniscoreboard.json"
+
+linescore_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/{{gid}}/linescore.json"
+boxscore_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/{{gid}}/boxscore.json"
+game_events_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/{{gid}}/game_events.json"
+game_highlights_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/{{gid}}/media/highlights.xml"
+
+highlights_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/media/highlights.xml"
+
+home_team_wins_template = "{{home_team_name}} beat the {{away_team_name}} {{home_team_runs}}-{{away_team_runs}} at {{venue}} on {{{original_date}}}"
+away_team_wins_template = "{{away_team_name}} beat the {{home_team_name}} {{away_team_runs}}-{{home_team_runs}} at {{venue}} on {{{original_date}}}"
+
+# View Templates
+game_events_description_template =  """
+                                    \n
+                                    {{#inning}}
+                                    \n
+                                    Bottom of the {{num}}
+                                    {{#bottom}}
+                                    {{#atbat}}
+                                    * {{des}}
+                                    {{/atbat}}
+                                    {{/bottom}}
+                                    \n
+                                    Top of the {{num}}
+                                    {{#top}}
+                                    {{#atbat}}
+                                    * {{des}}
+                                    {{/atbat}}
+                                    {{/top}}
+                                    \n
+                                    {{/inning}}
+                                    \n
+                                    """
