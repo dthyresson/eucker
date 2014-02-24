@@ -17,6 +17,7 @@ parser = new xml2js.Parser()
 
 moment = require('moment')
 chrono = require('chrono-node')
+{wait, repeat, doAndRepeat, waitUntil} = require 'wait'
 
 mlb_teams = ///
 (
@@ -158,9 +159,12 @@ miniscoreboard_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{yea
 linescore_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/{{gid}}/linescore.json"
 boxscore_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/{{gid}}/boxscore.json"
 game_events_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/{{gid}}/game_events.json"
+game_highlights_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/{{gid}}/media/highlights.xml"
 
-home_team_wins_template = "{{home_team_name}} beat the {{away_team_name}} {{home_team_runs}}-{{away_team_runs}}"
-away_team_wins_template = "{{away_team_name}} beat the {{home_team_name}} {{away_team_runs}}-{{home_team_runs}}"
+highlights_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/media/highlights.xml"
+
+home_team_wins_template = "{{home_team_name}} beat the {{away_team_name}} {{home_team_runs}}-{{away_team_runs}} at {{venue}} on {{{original_date}}}"
+away_team_wins_template = "{{away_team_name}} beat the {{home_team_name}} {{away_team_runs}}-{{home_team_runs}} at {{venue}} on {{{original_date}}}"
 
 game_events_description_template =  """
                                     \n
@@ -231,6 +235,52 @@ module.exports = (robot) ->
       else
         msg.send mustache.render(away_team_wins_template, game)
 
+  robot.respond /runs ([a-zA-Z\s]+) (yesterday|today|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
+    team = msg.match[1]
+    gameday_date = human_to_gameday_date msg.match[2]
+    gameday_linescore_data msg, gameday_date, team, (linescore) ->
+      total_runs_attribute = if is_home_team linescore, team
+        'home_team_runs'
+      else
+        'away_team_runs'
+      inning_runs_attribute = if is_home_team linescore, team
+        'home_inning_runs'
+      else
+        'away_inning_runs'
+      msg.send JSON.stringify _.map(linescore.game.linescore, inning_runs_attribute)
+
+  robot.respond /highlights (yesterday|today|[a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
+    gameday_date = human_to_gameday_date msg.match[1]
+    highlights_data msg, gameday_date, (highlights) ->
+      highlight = _.sample(highlights)
+      media = _.sample(highlight.media)
+      headline = media.headline
+      video_url = _.first(media.url)['_']
+      thumbnail_url = media.thumb
+      msg.send "#{thumbnail_url}".replace /_7.jpg/, "_43.jpg"
+      wait 500, ->
+        msg.send "Watch '#{headline}' - #{video_url}"
+
+  robot.respond /highlight ([a-zA-Z\s]+) (yesterday|today|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
+    team = msg.match[1]
+    gameday_date = human_to_gameday_date msg.match[2]
+    game_highlights_data msg, gameday_date, team, (highlights) ->
+      highlight = highlights.highlights
+      media = _.sample(highlight.media)
+      headline = media.headline
+      video_url = _.first(media.url)['_']
+      thumbnail_url = media.thumb
+      msg.send "#{thumbnail_url}".replace /_7.jpg/, "_43.jpg"
+      wait 500, ->
+        msg.send "Watch '#{headline}' - #{video_url}"
+
+  robot.respond /wild thing/i, (msg) ->
+    msg.send "http://wac.450f.edgecastcdn.net/80450F/banana1015.com/files/2011/08/wild-thing-630x417.jpg"
+
+  robot.respond /eucker|doyle|harry|harry doyle/i, (msg) ->
+    msg.send "Just a bit outside ..."
+
+# methods
 human_to_gameday_date = (text) ->
   date_obj = chrono.parse text
   date = moment(date_obj[0].startDate)
@@ -277,6 +327,22 @@ miniscoreboard_game_data = (msg, gameday_date, team, game) ->
     team_code = mlb_team_code team
     game game_for_team_code scoreboard, team_code
 
+highlights_data = (msg, gameday_date, highlights) ->
+  highlights_url = mustache.render(highlights_url_template, gameday_date)
+  msg.http(highlights_url)
+    .get() (err, res, body) ->
+      parser.parseString body, (error, result) ->
+        highlights result.games.highlights
+
+game_highlights_data = (msg, gameday_date, team, highlights) ->
+  game_data_directory msg, gameday_date, team, (gid) ->
+    gameday_date.gid = gid
+    game_highlights_url = mustache.render(game_highlights_url_template, gameday_date)
+    msg.http(game_highlights_url)
+      .get() (err, res, body) ->
+        parser.parseString body, (error, result) ->
+          highlights result
+
 game_data_directory = (msg, gameday_date, team, gid) ->
   master_scoreboard_data msg, gameday_date, (scoreboard) ->
     team_code = mlb_team_code team
@@ -291,3 +357,11 @@ game_for_team_code = (scoreboard, team_code) ->
   home_team_game = _.find(scoreboard.games.game, { 'home_code': team_code })
   away_team_game = _.find(scoreboard.games.game, { 'away_code': team_code })
   home_team_game or away_team_game
+
+is_home_team = (data, team_code) ->
+  code = _.pluck(data, 'home_code')
+  _.contains(code, mlb_team_code team_code)
+
+is_away_team = (data, team_code) ->
+  code = _.pluck(data, 'away_code')
+  _.contains(code, mlb_team_code team_code)

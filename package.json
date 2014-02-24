@@ -31,7 +31,8 @@
     "moment": ">= 2.5.1",
     "ascii-table": ">= 0.0.4",
     "mustache": ">= 0.8.1",
-    "lodash": ">= 2.4.1"
+    "lodash": ">= 2.4.1",
+    "wait": ">= 0.1.0"
   },
 
   "engines": {
