@@ -32,7 +32,8 @@
     "ascii-table": ">= 0.0.4",
     "mustache": ">= 0.8.1",
     "lodash": ">= 2.4.1",
-    "wait": ">= 0.1.0"
+    "wait": ">= 0.1.0",
+    "tablify": ">= 0.1.1"
   },
 
   "engines": {

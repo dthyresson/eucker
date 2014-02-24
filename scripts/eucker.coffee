@@ -19,6 +19,8 @@ chrono = require('chrono-node')
 
 {wait, repeat, doAndRepeat, waitUntil} = require 'wait'
 
+tablify = require('tablify').tablify
+
 # Eucker Bot!
 module.exports = (robot) ->
 
@@ -57,7 +59,8 @@ module.exports = (robot) ->
         'home_inning_runs'
       else
         'away_inning_runs'
-      msg.send JSON.stringify _.map(linescore.game.linescore, inning_runs_attribute)
+      # msg.send JSON.stringify _.map(linescore.game.linescore, inning_runs_attribute)
+      msg.send tablify humanize_linescore_data linescore.game.linescore
 
   # Random video highlight for a date
   # Usage: hubot highlights October 8th 2013
@@ -67,7 +70,7 @@ module.exports = (robot) ->
       highlight = _.sample(highlights)
       media = _.sample(highlight.media)
       headline = media.headline
-      video_url = _.first(media.url)['_']
+      video_url = _.chain(media.url).first.value
       thumbnail_url = large_thumbnail media.thumb
       msg.send  "#{thumbnail_url}"
       wait 500, ->
@@ -82,7 +85,7 @@ module.exports = (robot) ->
       highlight = highlights.highlights
       media = _.sample(highlight.media)
       headline = media.headline
-      video_url = _.first(media.url)['_']
+      video_url = _.chain(media.url).first.value
       thumbnail_url = large_thumbnail media.thumb
       msg.send "#{thumbnail_url}"
       wait 500, ->
@@ -247,6 +250,9 @@ is_away_team = (data, team_code) ->
 # Given any Gameday thumbail image url, return the large thumbnail image url. Note: Gameday appears to store thumbnail images in a variety of sizes: 6, 7, 8, 22, 43
 large_thumbnail = (thumbnail) ->
   "#{thumbnail}".replace /_\d+.jpg/, "_43.jpg"
+
+humanize_linescore_data = (linescore_data) ->
+  linescore_data
 
 mlb_teams = ///
 (
