@@ -3,11 +3,12 @@ module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    move: {
-      eucker: {
-        src: ['src/*.coffee'],
-        dest: 'scripts/*.coffee',
-      }
+    copy: {
+      main: {
+        files: [
+          {expand: true, flatten: true, src: ['src/*.coffee'], dest: 'scripts/', filter: 'isFile'}
+          ]
+      },
     }
   });
 
@@ -15,6 +16,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib');
 
   // Default task(s).
-  grunt.registerTask('default', ['move']);
+  grunt.registerTask('default', ['copy']);
 
 };
