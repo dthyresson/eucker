@@ -1,30 +1,26 @@
 {
   "name": "hosted-hubot",
   "version": "2.7.1",
-
   "author": "GitHub Inc.",
-
   "keywords": [
     "github",
     "hubot",
     "campfire",
     "bot"
   ],
-
   "description": "A simple helpful robot for your Company",
-
-  "licenses": [{
-    "type": "MIT",
-    "url": "https://github.com/github/hubot/raw/master/LICENSE"
-  }],
-
-  "repository" : {
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/github/hubot/raw/master/LICENSE"
+    }
+  ],
+  "repository": {
     "type": "git",
     "url": "https://github.com/github/hubot.git"
   },
-
   "dependencies": {
-    "hubot":         ">= 2.6.0 < 3.0.0",
+    "hubot": ">= 2.6.0 < 3.0.0",
     "hubot-scripts": ">= 2.5.0 < 3.0.0",
     "xml2js": ">= 0.4.1",
     "chrono-node": ">= 0.1.8",
@@ -35,9 +31,37 @@
     "wait": ">= 0.1.0",
     "tablify": ">= 0.1.1"
   },
-
   "engines": {
     "node": ">= 0.8.x",
-    "npm":  ">= 1.1.x"
+    "npm": ">= 1.1.x"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-copy": "~0.5.0",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-sass": "~0.7.2",
+    "grunt-contrib-htmlmin": "~0.2.0",
+    "grunt-contrib-compass": "~0.7.2",
+    "grunt-contrib-coffee": "~0.10.1",
+    "grunt-contrib-jst": "~0.5.1",
+    "grunt-contrib-cssmin": "~0.7.0",
+    "grunt-contrib-csslint": "~0.2.0",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-contrib-uglify": "~0.3.2",
+    "grunt-contrib-requirejs": "~0.4.1",
+    "grunt-contrib-handlebars": "~0.6.1",
+    "grunt-contrib-jshint": "~0.8.0",
+    "grunt-contrib-compress": "~0.6.1",
+    "grunt-contrib-stylus": "~0.12.0",
+    "grunt-contrib-qunit": "~0.4.0",
+    "grunt-contrib-jasmine": "~0.6.1",
+    "grunt-contrib-nodeunit": "~0.3.2",
+    "grunt-contrib-jade": "~0.10.0",
+    "grunt-contrib-imagemin": "~0.4.1",
+    "grunt-contrib-connect": "~0.6.0",
+    "grunt-contrib-less": "~0.9.0",
+    "grunt-contrib-yuidoc": "~0.5.1",
+    "grunt-contrib": "~0.9.0"
   }
 }

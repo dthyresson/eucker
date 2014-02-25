@@ -33,21 +33,21 @@ module.exports = (robot) ->
       msg.send mustache.render(game_events_description_template, game_events.game)
 
   # Did a team win or lose on a given date?
-  # Usage: hubot score red sox on April 19th 2013
-  robot.respond /score ([a-zA-Z\s]+) (yesterday|today|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
-    team = msg.match[1]
-    gameday_date = human_to_gameday_date msg.match[2]
+  # Usage: hubot did the red sox win on April 19th 2013?
+  robot.respond /([a-zA-Z\s]+) (win|lose|won|lost) (yesterday|today|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
+    team = msg.match[1].match(mlb_teams)[1]
+    gameday_date = human_to_gameday_date msg.match[3]
     miniscoreboard_game_data msg, gameday_date, team, (game) ->
-      home_team_runs = game.home_team_runs
-      away_team_runs = game.away_team_runs
+      home_team_runs = +"#{game.home_team_runs}"
+      away_team_runs = +"#{game.away_team_runs}"
       if home_team_runs > away_team_runs
         msg.send mustache.render(home_team_wins_template, game)
       else
         msg.send mustache.render(away_team_wins_template, game)
 
-  # Comma list of runs scored by a team. Demonstrates logic for home vs away team.
-  # Usage: hubot runs red sox on April 19th 2013
-  robot.respond /runs ([a-zA-Z\s]+) (yesterday|today|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
+  # Ascii Table Boxscore for the game played by the given team on a specified date
+  # Usage: hubot box me red sox on April 19th 2013
+  robot.respond /box me ([a-zA-Z\s]+) (yesterday|today|for [a-zA-Z0-9\s]*|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
     team = msg.match[1]
     gameday_date = human_to_gameday_date msg.match[2]
     gameday_linescore_data msg, gameday_date, team, (linescore) ->
@@ -63,43 +63,47 @@ module.exports = (robot) ->
       msg.send tablify humanized_linescore, {show_index: false, keys: ['INNING', linescore.game.home_name_abbrev, linescore.game.away_name_abbrev]}
 
   # Random video highlight for a date
-  # Usage: hubot highlights October 8th 2013
-  robot.respond /highlights (yesterday|today|[a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
+  # Usage: hubot highlights for October 8th 2013
+  robot.respond /highlights (yesterday|today|on [a-zA-Z0-9\s]*|for [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
     gameday_date = human_to_gameday_date msg.match[1]
     highlights_data msg, gameday_date, (highlights) ->
       highlight = _.sample(highlights)
       media = _.sample(highlight.media)
       headline = media.headline
-      video_url = _.chain(media.url).first.value
+      video_url = _.first(media.url)['_']
       thumbnail_url = large_thumbnail media.thumb
       msg.send  "#{thumbnail_url}"
       wait 500, ->
         msg.send "Watch '#{headline}' - #{video_url}"
 
-  # Random video highlight for a game played by the specified team on a given date
-  # Usage: hubot highlight red sox on October 8th 2013
-  robot.respond /highlight ([a-zA-Z\s]+) (yesterday|today|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
+  # Random video highlight for a game played by the specified team for a given date
+  # Usage: hubot highlight red sox for October 8th 2013
+  robot.respond /highlight ([a-zA-Z\s]+) (yesterday|today|for [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
     team = msg.match[1]
     gameday_date = human_to_gameday_date msg.match[2]
     game_highlights_data msg, gameday_date, team, (highlights) ->
       highlight = highlights.highlights
       media = _.sample(highlight.media)
       headline = media.headline
-      video_url = _.chain(media.url).first.value
+      video_url = _.first(media.url)['_']
       thumbnail_url = large_thumbnail media.thumb
       msg.send "#{thumbnail_url}"
       wait 500, ->
         msg.send "Watch '#{headline}' - #{video_url}"
 
+  #
+  # Major League Homage
+  #
+
   # Image of Charlie Sheen as Wild Thing
   # Usage: hubot wild thing
-  robot.respond /wild thing/i, (msg) ->
+  robot.hear /wild thing/i, (msg) ->
     msg.send "http://wac.450f.edgecastcdn.net/80450F/banana1015.com/files/2011/08/wild-thing-630x417.jpg"
 
   # Just a bit outside!
   # Usage: hubot eucker
-  robot.respond /eucker|doyle|harry|harry doyle/i, (msg) ->
-    msg.send "Just a bit outside ..."
+  robot.hear /eucker|doyle|harry|harry doyle/i, (msg) ->
+    msg.reply "Just a bit outside ..."
 
   #
   # Demo examples for core gameday methods, such as getting a GID, boxscore, miniscoreboard, linescore, etc
