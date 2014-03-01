@@ -12,23 +12,54 @@ And became immortalized in the classic film Major League with this quote:
 
 [![Just a Bit Outside](http://img.youtube.com/vi/dalrphHivOs/0.jpg)](http://www.youtube.com/watch?v=dalrphHivOs)
 
-Oh, he was also played the dad in 80's sitcom, Mr. Belvedere.  
+Oh, he also played the dad in 80's sitcom, Mr. Belvedere.  
 
 [bob_eucker]: http://en.wikipedia.org/wiki/Bob_Uecker
 
-## Baseball Hackday
+## What can Eucker do?
 
-**Important!** This project is a work in progress for [Baseball Hackday - Boston][hackday] which takes place March 2nd 2014, 9:30am – 6pm.
+He can respond to 'natural language-like' queiriues with baseball game and stat updates within your Campfire room.
+
+Asking for the score:
+
+```hubot score seattle on may 11 2013
+Athletics beat the Mariners 4-3 at Safeco Field on 2013/05/11
+
+Or a boxscore:
+
+```hubot runs seattle on may 11 2013
+----------------------
+| INNING | SEA | OAK |
+----------------------
+| 1      | 0   | 0   |
+| 2      | 0   | 1   |
+| 3      | 0   | 0   |
+| 4      | 0   | 1   |
+| 5      | 2   | 1   |
+| 6      | 0   | 1   |
+| 7      | 1   | 0   |
+| 8      | 0   | 0   |
+| 9      | 0   | 0   |
+| Hits   | 7   | 8   |
+| Runs   | 3   | 4   |
+| Errors | 0   | 0   |
+----------------------
+
+Since he understands dates like "today" or "yesterday" last Tuesday" or "next Friday" or "on may 11 2013", your inquiries can sounded human.
+
+## Why Eucker?
+
+Eucker is a project for Baseball Hackday for [Baseball Hackday - Boston][hackday] which takes place March 2nd 2014, 9:30am – 6pm.
 
 [hackday]: http://www.baseballhackday.com/boston/
 
 ## Using Eucker 
 
-## Commands
+### Commands
 
 TODO
 
-## MLB Gameday Structure
+### MLB Gameday Structure
 
 TODO
 
