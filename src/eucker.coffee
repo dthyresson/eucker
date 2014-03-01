@@ -26,7 +26,30 @@ module.exports = (robot) ->
 
   # Lists a game's events
   # Usage: hubot events red sox on April 19th 2013
-  robot.respond /events ([a-zA-Z\s]+) (yesterday|today|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
+
+  game_events_description_template =  """
+                                      \n
+                                      {{#inning}}
+                                      \n
+                                      Bottom of the {{num}}
+                                      {{#bottom}}
+                                      {{#atbat}}
+                                      * {{des}}
+                                      {{/atbat}}
+                                      {{/bottom}}
+                                      \n
+                                      Top of the {{num}}
+                                      {{#top}}
+                                      {{#atbat}}
+                                      * {{des}}
+                                      {{/atbat}}
+                                      {{/top}}
+                                      \n
+                                      {{/inning}}
+                                      \n
+                                      """
+
+  robot.respond /events ([a-zA-Z\s]+) (now|yesterday|today|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
     team = msg.match[1]
     gameday_date = human_to_gameday_date msg.match[2]
     gameday_game_events_data msg, gameday_date, team, (game_events) ->
@@ -34,7 +57,11 @@ module.exports = (robot) ->
 
   # Did a team win or lose on a given date?
   # Usage: hubot did the red sox win on April 19th 2013?
-  robot.respond /([a-zA-Z\s]+) (win|lose|won|lost) (yesterday|today|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
+
+  home_team_wins_template = "{{home_team_name}} beat the {{away_team_name}} {{home_team_runs}}-{{away_team_runs}} at {{venue}} on {{{original_date}}}"
+  away_team_wins_template = "{{away_team_name}} beat the {{home_team_name}} {{away_team_runs}}-{{home_team_runs}} at {{venue}} on {{{original_date}}}"
+
+  robot.respond /([a-zA-Z\s]+) (win|lose|won|lost) (now|yesterday|today|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
     team = msg.match[1].match(mlb_teams)[1]
     gameday_date = human_to_gameday_date msg.match[3]
     miniscoreboard_game_data msg, gameday_date, team, (game) ->
@@ -47,7 +74,7 @@ module.exports = (robot) ->
 
   # Ascii Table Boxscore for the game played by the given team on a specified date
   # Usage: hubot box me red sox on April 19th 2013
-  robot.respond /box me ([a-zA-Z\s]+) (yesterday|today|for [a-zA-Z0-9\s]*|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
+  robot.respond /box me ([a-zA-Z\s]+) (now|yesterday|today|for [a-zA-Z0-9\s]*|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
     team = msg.match[1]
     gameday_date = human_to_gameday_date msg.match[2]
     gameday_linescore_data msg, gameday_date, team, (linescore) ->
@@ -64,7 +91,7 @@ module.exports = (robot) ->
 
   # Random video highlight for a date
   # Usage: hubot highlights for October 8th 2013
-  robot.respond /highlights (yesterday|today|on [a-zA-Z0-9\s]*|for [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
+  robot.respond /highlights (now|yesterday|today|on [a-zA-Z0-9\s]*|for [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
     gameday_date = human_to_gameday_date msg.match[1]
     highlights_data msg, gameday_date, (highlights) ->
       highlight = _.sample(highlights)
@@ -78,7 +105,7 @@ module.exports = (robot) ->
 
   # Random video highlight for a game played by the specified team for a given date
   # Usage: hubot highlight red sox for October 8th 2013
-  robot.respond /highlight ([a-zA-Z\s]+) (yesterday|today|for [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
+  robot.respond /highlight ([a-zA-Z\s]+) (now|yesterday|today|for [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
     team = msg.match[1]
     gameday_date = human_to_gameday_date msg.match[2]
     game_highlights_data msg, gameday_date, team, (highlights) ->
@@ -110,33 +137,39 @@ module.exports = (robot) ->
   #
 
   # For a team playing on a date, find its GID (gameday id)
-  robot.respond /gid ([a-zA-Z\s]+) (yesterday|today|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
+  robot.respond /gid ([a-zA-Z\s]+) (now|yesterday|today|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
     team = msg.match[1]
     gameday_date = human_to_gameday_date msg.match[2]
     game_data_directory msg, gameday_date, team, (gid) ->
       msg.send gid
 
+  # For a date, show the Scoreboard data
+  robot.respond /scoreboard (now|yesterday|today|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
+    gameday_date = human_to_gameday_date msg.match[1]
+    scoreboard_data msg, gameday_date, (scoreboard) ->
+      msg.send JSON.stringify(scoreboard)
+
   # For a date, show the Master Scoreboard data
-  robot.respond /master_scoreboard (yesterday|today|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
+  robot.respond /master_scoreboard (now|yesterday|today|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
     gameday_date = human_to_gameday_date msg.match[1]
     master_scoreboard_data msg, gameday_date, (master_scoreboard) ->
       msg.send JSON.stringify(master_scoreboard)
 
   # For a date, show the Mini Scoreboard data
-  robot.respond /miniscoreboard (yesterday|today|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
+  robot.respond /miniscoreboard (now|yesterday|today|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
     gameday_date = human_to_gameday_date msg.match[1]
     miniscoreboard_data msg, gameday_date, (miniscoreboard) ->
       msg.send JSON.stringify(miniscoreboard)
 
   # For a team playing on a date, show the Linescore data for that game
-  robot.respond /linescore ([a-zA-Z\s]+) (yesterday|today|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
+  robot.respond /linescore ([a-zA-Z\s]+) (now|yesterday|today|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
     team = msg.match[1]
     gameday_date = human_to_gameday_date msg.match[2]
     gameday_linescore_data msg, gameday_date, team, (linescore) ->
       msg.send JSON.stringify(linescore)
 
   # For a team playing on a date, show the Boxscore data for that game
-  robot.respond /boxscore ([a-zA-Z\s]+) (yesterday|today|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
+  robot.respond /boxscore ([a-zA-Z\s]+) (now|yesterday|today|on [a-zA-Z0-9\s]*|last [a-zA-Z0-9\s]*|next [a-zA-Z0-9\s]*)/i, (msg) ->
     team = msg.match[1]
     gameday_date = human_to_gameday_date msg.match[2]
     gameday_boxscore_data msg, gameday_date, team, (boxscore) ->
@@ -155,6 +188,7 @@ human_to_gameday_date = (text) ->
   {year: date.format("YYYY"), month: date.format("MM"), day: date.format("DD"), gid: ''}
 
 # Given a date and a team, return the game events data
+game_events_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/{{gid}}/game_events.json"
 gameday_game_events_data = (msg, gameday_date, team, game_events) ->
   game_data_directory msg, gameday_date, team, (gid) ->
     gameday_date.gid = gid
@@ -164,6 +198,8 @@ gameday_game_events_data = (msg, gameday_date, team, game_events) ->
         game_events JSON.parse(body).data
 
 # Given a date and a team, return the game linescore
+linescore_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/{{gid}}/linescore.json"
+
 gameday_linescore_data = (msg, gameday_date, team, linescore) ->
   game_data_directory msg, gameday_date, team, (gid) ->
     gameday_date.gid = gid
@@ -173,6 +209,7 @@ gameday_linescore_data = (msg, gameday_date, team, linescore) ->
         linescore JSON.parse(body).data
 
 # Given a date and a team, return the game boxscore
+boxscore_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/{{gid}}/boxscore.json"
 gameday_boxscore_data = (msg, gameday_date, team, boxscore) ->
   game_data_directory msg, gameday_date, team, (gid) ->
     gameday_date.gid = gid
@@ -181,7 +218,20 @@ gameday_boxscore_data = (msg, gameday_date, team, boxscore) ->
       .get() (err, res, body) ->
         boxscore JSON.parse(body).data
 
+# Given a date, return the Scoreboard for that day
+game_highlights_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/{{gid}}/scoreboard.xml"
+
+scoreboard_data = (msg, gameday_date, scoreboard) ->
+  scoreboard_url = mustache.render(scoreboard_url_template, gameday_date)
+  msg.http(scoreboard_url)
+    .get() (err, res, body) ->
+      parser.parseString body, (error, result) ->
+        scoreboard result.games.scoreboard
+
+
 # Given a date, return the Master Scoreboard
+master_scoreboard_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/master_scoreboard.json"
+
 master_scoreboard_data = (msg, gameday_date, scoreboard) ->
   master_scoreboard_url = mustache.render(master_scoreboard_url_template, gameday_date)
   msg.http(master_scoreboard_url)
@@ -189,6 +239,8 @@ master_scoreboard_data = (msg, gameday_date, scoreboard) ->
       scoreboard JSON.parse(body).data
 
 # Given a date, return the Mini Scoreboard
+miniscoreboard_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/miniscoreboard.json"
+
 miniscoreboard_data = (msg, gameday_date, scoreboard) ->
   miniscoreboard_url = mustache.render(miniscoreboard_url_template, gameday_date)
   msg.http(miniscoreboard_url)
@@ -202,6 +254,8 @@ miniscoreboard_game_data = (msg, gameday_date, team, game) ->
     game game_for_team_code scoreboard, team_code
 
 # Given a date, return the Media Highlights (such as video clips)
+game_highlights_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/{{gid}}/media/highlights.xml"
+
 highlights_data = (msg, gameday_date, highlights) ->
   highlights_url = mustache.render(highlights_url_template, gameday_date)
   msg.http(highlights_url)
@@ -210,6 +264,8 @@ highlights_data = (msg, gameday_date, highlights) ->
         highlights result.games.highlights
 
 # Given a date and a team, return the Media Highlights (such as video clips) for the game played by the team
+highlights_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/media/highlights.xml"
+
 game_highlights_data = (msg, gameday_date, team, highlights) ->
   game_data_directory msg, gameday_date, team, (gid) ->
     gameday_date.gid = gid
@@ -231,59 +287,6 @@ game_data_directory = (msg, gameday_date, team, gid) ->
     gid game.game_data_directory.match(/(gid\w*)$/i)[0]
 
 # Translates a human expression of a team (Red Sox, Boston, Boston Red Sox, BOS) into the Gameday Team Code
-mlb_team_code = (team) ->
-  team_attributes = _.find(gameday_team_lookup, {nickname: team.toLowerCase()}) or _.find(gameday_team_lookup, {abbreviation: team.toLowerCase()}) or _.find(gameday_team_lookup, {name: team.toLowerCase()}) or _.find(gameday_team_lookup, {location: team.toLowerCase()})
-  team_attributes.code
-
-# Given Gameday scoreboard game data, find the one played by the requested team
-game_for_team_code = (scoreboard, team_code) ->
-  home_team_game = _.find(scoreboard.games.game, { 'home_code': team_code })
-  away_team_game = _.find(scoreboard.games.game, { 'away_code': team_code })
-  home_team_game or away_team_game
-
-# Given game data, determines if specified team is the home team
-is_home_team = (data, team_code) ->
-  code = _.pluck(data, 'home_code')
-  _.contains(code, mlb_team_code team_code)
-
-# Given game data, determines if specified team is the away team
-is_away_team = (data, team_code) ->
-  code = _.pluck(data, 'away_code')
-  _.contains(code, mlb_team_code team_code)
-
-# Given any Gameday thumbail image url, return the large thumbnail image url. Note: Gameday appears to store thumbnail images in a variety of sizes: 6, 7, 8, 22, 43
-large_thumbnail = (thumbnail) ->
-  "#{thumbnail}".replace /_\d+.jpg/, "_43.jpg"
-
-# lines score with team names
-humanize_linescore = (linescore_data) ->
-  humanized_linescore = []
-  _.forEach linescore_data.linescore, (inning_line) ->
-    i = {}
-    i[linescore_data.away_name_abbrev] = inning_line.away_inning_runs
-    i[linescore_data.home_name_abbrev] = inning_line.home_inning_runs
-    i['INNING'] = inning_line.inning
-    humanized_linescore.push i
-
-  hits = {}
-  hits['INNING'] = 'Hits'
-  hits[linescore_data.away_name_abbrev] = linescore_data.away_team_hits
-  hits[linescore_data.home_name_abbrev] = linescore_data.home_team_hits
-  humanized_linescore.push hits
-
-  runs = {}
-  runs['INNING'] = 'Runs'
-  runs[linescore_data.away_name_abbrev] = linescore_data.away_team_runs
-  runs[linescore_data.home_name_abbrev] = linescore_data.home_team_runs
-  humanized_linescore.push runs
-
-  errors = {}
-  errors['INNING'] = 'Errors'
-  errors[linescore_data.away_name_abbrev] = linescore_data.away_team_errors
-  errors[linescore_data.home_name_abbrev] = linescore_data.home_team_errors
-  humanized_linescore.push errors
-
-  humanized_linescore
 
 mlb_teams = ///
 (
@@ -445,39 +448,56 @@ gameday_team_lookup = [
               {code: 'bos', nickname: 'red sox', name: 'boston red sox', location: 'boston', abbreviation: 'bos'}
             ]
 
-# URL Templates
-master_scoreboard_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/master_scoreboard.json"
-miniscoreboard_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/miniscoreboard.json"
+mlb_team_code = (team) ->
+  team_attributes = _.find(gameday_team_lookup, {nickname: team.toLowerCase()}) or _.find(gameday_team_lookup, {abbreviation: team.toLowerCase()}) or _.find(gameday_team_lookup, {name: team.toLowerCase()}) or _.find(gameday_team_lookup, {location: team.toLowerCase()})
+  team_attributes.code
 
-linescore_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/{{gid}}/linescore.json"
-boxscore_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/{{gid}}/boxscore.json"
-game_events_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/{{gid}}/game_events.json"
-game_highlights_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/{{gid}}/media/highlights.xml"
+# Given Gameday scoreboard game data, find the one played by the requested team
+game_for_team_code = (scoreboard, team_code) ->
+  home_team_game = _.find(scoreboard.games.game, { 'home_code': team_code })
+  away_team_game = _.find(scoreboard.games.game, { 'away_code': team_code })
+  home_team_game or away_team_game
 
-highlights_url_template = "http://gd2.mlb.com/components/game/mlb/year_{{year}}/month_{{month}}/day_{{day}}/media/highlights.xml"
+# Given game data, determines if specified team is the home team
+is_home_team = (data, team_code) ->
+  code = _.pluck(data, 'home_code')
+  _.contains(code, mlb_team_code team_code)
 
-home_team_wins_template = "{{home_team_name}} beat the {{away_team_name}} {{home_team_runs}}-{{away_team_runs}} at {{venue}} on {{{original_date}}}"
-away_team_wins_template = "{{away_team_name}} beat the {{home_team_name}} {{away_team_runs}}-{{home_team_runs}} at {{venue}} on {{{original_date}}}"
+# Given game data, determines if specified team is the away team
+is_away_team = (data, team_code) ->
+  code = _.pluck(data, 'away_code')
+  _.contains(code, mlb_team_code team_code)
 
-# View Templates
-game_events_description_template =  """
-                                    \n
-                                    {{#inning}}
-                                    \n
-                                    Bottom of the {{num}}
-                                    {{#bottom}}
-                                    {{#atbat}}
-                                    * {{des}}
-                                    {{/atbat}}
-                                    {{/bottom}}
-                                    \n
-                                    Top of the {{num}}
-                                    {{#top}}
-                                    {{#atbat}}
-                                    * {{des}}
-                                    {{/atbat}}
-                                    {{/top}}
-                                    \n
-                                    {{/inning}}
-                                    \n
-                                    """
+# Given any Gameday thumbail image url, return the large thumbnail image url. Note: Gameday appears to store thumbnail images in a variety of sizes: 6, 7, 8, 22, 43
+large_thumbnail = (thumbnail) ->
+  "#{thumbnail}".replace /_\d+.jpg/, "_43.jpg"
+
+# lines score with team names
+humanize_linescore = (linescore_data) ->
+  humanized_linescore = []
+  _.forEach linescore_data.linescore, (inning_line) ->
+    i = {}
+    i[linescore_data.away_name_abbrev] = inning_line.away_inning_runs
+    i[linescore_data.home_name_abbrev] = inning_line.home_inning_runs
+    i['INNING'] = inning_line.inning
+    humanized_linescore.push i
+
+  hits = {}
+  hits['INNING'] = 'Hits'
+  hits[linescore_data.away_name_abbrev] = linescore_data.away_team_hits
+  hits[linescore_data.home_name_abbrev] = linescore_data.home_team_hits
+  humanized_linescore.push hits
+
+  runs = {}
+  runs['INNING'] = 'Runs'
+  runs[linescore_data.away_name_abbrev] = linescore_data.away_team_runs
+  runs[linescore_data.home_name_abbrev] = linescore_data.home_team_runs
+  humanized_linescore.push runs
+
+  errors = {}
+  errors['INNING'] = 'Errors'
+  errors[linescore_data.away_name_abbrev] = linescore_data.away_team_errors
+  errors[linescore_data.home_name_abbrev] = linescore_data.home_team_errors
+  humanized_linescore.push errors
+
+  humanized_linescore

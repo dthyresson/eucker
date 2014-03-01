@@ -1,4 +1,4 @@
 node_modules
 .DS_Store*
 env.sh
-scripts/eucker.js
+scripts/*.js

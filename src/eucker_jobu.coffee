@@ -11,5 +11,11 @@ jobu_quotes = [
 # Jobu Quotes!
 # Usage: hubot jobu me
 module.exports = (robot) ->
-  robot.hear /jobu me/i, (msg) ->
+  robot.hear /bats/i, (msg) ->
+    msg.send msg.random jobu_quotes
+
+  robot.respond /jobu me/i, (msg) ->
+    msg.send msg.random jobu_quotes
+
+  robot.hear /steal/i, (msg) ->
     msg.send msg.random jobu_quotes

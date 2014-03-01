@@ -1,6 +1,30 @@
-# Hubot
+# Eucker
 
-This is a version of GitHub's Campfire bot, hubot. He's pretty cool.
+Eucker is a set of scripts for [Hubot][hubot], a version of GitHub's Campfire bot, that responds to Major League Baseball requests to return scores, boxscores, stats and other tidbits of baseball info to sprinkle into your workday.
+
+He's inspired by [Bob Eucker][bob_eucker], a retired American Major League Baseball player, later a sportscaster, comedian and actor. Uecker was given the title of "Mr. Baseball" by TV talk show host Johnny Carson. 
+
+He made lots of Miller Light Ads in the early 1980's.
+
+[![Miller Light Ads](http://img.youtube.com/vi/mUPeO0MbBgc/0.jpg)](http://www.youtube.com/watch?v=mUPeO0MbBgc)
+
+And became immortalized in the classic film Major League with this quote:
+
+[![Just a Bit Outside](http://img.youtube.com/vi/dalrphHivOs/0.jpg)](http://www.youtube.com/watch?v=dalrphHivOs)
+
+Oh, he was also played the dad in 80's sitcom, Mr. Belvedere.  
+
+[bob_eucker]: http://en.wikipedia.org/wiki/Bob_Uecker
+
+## Hubot
+
+[Hubot][hubot]  is your company's robot. Install him in your company to dramatically improve and reduce employee efficiency. [Hubot][hubot] 
+
+[hubot]: http://hubot.github.com/
+
+# Using Eucker on Hubot
+
+Eucker is built on a version of GitHub's Campfire bot, hubot. He's pretty cool.
 
 This version is designed to be deployed on [Heroku][heroku]. This README was generated for you by hubot to help get you started. Definitely update and improve to talk about your own instance, how to use and deploy, what functionality he has, etc!
 
