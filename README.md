@@ -20,6 +20,8 @@ Oh, he also played the dad in 80's sitcom, Mr. Belvedere.
 
 He can respond to 'natural language-like' queries with baseball game and stat updates within your Campfire room.
 
+![Example 1](https://github.com/dthyresson/eucker/raw/master/images/eucker_score_example1.png "Example 1")
+
 **Question:** Did a team win or lose on a given date?
 
 **Usage:** hubot did the red sox win on April 19th 2013?
@@ -31,6 +33,8 @@ He can respond to 'natural language-like' queries with baseball game and stat up
 **Question:** Lists a game's events
 
 **Usage:** hubot events red sox on April 19th 2013
+
+![Video Example 1](https://github.com/dthyresson/eucker/raw/master/images/eucker_video_example1.png "Video Example 1")
 
 **Question:** Random video highlight for a date
 
