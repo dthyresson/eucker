@@ -20,20 +20,20 @@ Oh, he also played the dad in 80's sitcom, Mr. Belvedere.
 
 He can respond to 'natural language-like' queiriues with baseball game and stat updates within your Campfire room.
 
-  # Did a team win or lose on a given date?
-  # Usage: hubot did the red sox win on April 19th 2013?
+**Question:** Did a team win or lose on a given date?
+**Usage:** hubot did the red sox win on April 19th 2013?
 
-  # Ascii Table Boxscore for the game played by the given team on a specified date
-  # Usage: hubot box me red sox on April 19th 2013
+**Question:** Ascii Table Boxscore for the game played by the given team on a specified date
+**Usage:** hubot box me red sox on April 19th 2013
 
-  # Lists a game's events
-  # Usage: hubot events red sox on April 19th 2013
+**Question:** Lists a game's events
+**Usage:** hubot events red sox on April 19th 2013
 
-  # Random video highlight for a date
-  # Usage: hubot highlights for October 8th 2013
+**Question:** Random video highlight for a date
+**Usage:** hubot highlights for October 8th 2013
 
-  # Random video highlight for a game played by the specified team for a given date
-  # Usage: hubot highlight red sox for October 8th 2013
+**Question:** Random video highlight for a game played by the specified team for a given date
+**Usage:** hubot highlight red sox for October 8th 2013
 
 Since he understands dates like "today" or "yesterday" last Tuesday" or "next Friday" or "on may 11 2013", your inquiries can sounded human.
 
