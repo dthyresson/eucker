@@ -20,32 +20,24 @@ Oh, he also played the dad in 80's sitcom, Mr. Belvedere.
 
 He can respond to 'natural language-like' queiriues with baseball game and stat updates within your Campfire room.
 
-Asking for the score:
+  # Did a team win or lose on a given date?
+  # Usage: hubot did the red sox win on April 19th 2013?
 
-```hubot score seattle on may 11 2013
-Athletics beat the Mariners 4-3 at Safeco Field on 2013/05/11
+  # Ascii Table Boxscore for the game played by the given team on a specified date
+  # Usage: hubot box me red sox on April 19th 2013
 
-Or a boxscore:
+  # Lists a game's events
+  # Usage: hubot events red sox on April 19th 2013
 
-```hubot runs seattle on may 11 2013
-----------------------
-| INNING | SEA | OAK |
-----------------------
-| 1      | 0   | 0   |
-| 2      | 0   | 1   |
-| 3      | 0   | 0   |
-| 4      | 0   | 1   |
-| 5      | 2   | 1   |
-| 6      | 0   | 1   |
-| 7      | 1   | 0   |
-| 8      | 0   | 0   |
-| 9      | 0   | 0   |
-| Hits   | 7   | 8   |
-| Runs   | 3   | 4   |
-| Errors | 0   | 0   |
-----------------------
+  # Random video highlight for a date
+  # Usage: hubot highlights for October 8th 2013
+
+  # Random video highlight for a game played by the specified team for a given date
+  # Usage: hubot highlight red sox for October 8th 2013
 
 Since he understands dates like "today" or "yesterday" last Tuesday" or "next Friday" or "on may 11 2013", your inquiries can sounded human.
+
+Eucker's capabilities will be expanded during [Baseball Hackday - Boston][hackday] which takes place March 2nd 2014, 9:30am – 6pm.
 
 ## Why Eucker?
 
@@ -57,7 +49,7 @@ Eucker is a project for Baseball Hackday for [Baseball Hackday - Boston][hackday
 
 ### Commands
 
-TODO
+TODO: Final Commands
 
 ### MLB Gameday Structure
 
