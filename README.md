@@ -16,13 +16,35 @@ Oh, he was also played the dad in 80's sitcom, Mr. Belvedere.
 
 [bob_eucker]: http://en.wikipedia.org/wiki/Bob_Uecker
 
-## Hubot
+## Baseball Hackday
+
+**Important!** This project is a work in progress for [Baseball Hackday - Boston][hackday] which takes place March 2nd 2014, 9:30am – 6pm.
+
+[hackday]: http://www.baseballhackday.com/boston/
+
+## Using Eucker 
+
+## Commands
+
+TODO
+
+## MLB Gameday Structure
+
+TODO
+
+## Acknowledgements
+
+### MLB Gameday and Terms of Use
+
+These scripts access MLB Gameday data which is copyrighted by MLB Advanced Media, L.P.  Use of any content acknowledges agreement to the terms posted here http://gdx.mlb.com/components/copyright.txt
+
+### Hubot
 
 [Hubot][hubot]  is your company's robot. Install him in your company to dramatically improve and reduce employee efficiency. [Hubot][hubot] 
 
 [hubot]: http://hubot.github.com/
 
-# Using Eucker on Hubot
+# Installing Eucker on Hubot
 
 Eucker is built on a version of GitHub's Campfire bot, hubot. He's pretty cool.
 
