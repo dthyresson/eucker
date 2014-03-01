@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=640" />
+
+    <link rel="stylesheet" href="stylesheets/core.css" media="screen"/>
+    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)"/>
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
+
+    <script type="text/javascript" src="javascripts/modernizr.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('#main_content').headsmart()
+      })
+    </script>
+    <title>Eucker by dthyresson</title>
+  </head>
+
+  <body>
+    <a id="forkme_banner" href="https://github.com/dthyresson/eucker">View on GitHub</a>
+    <div class="shell">
+
+      <header>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <h1>Eucker</h1>
+            <h2>Eucker is a Hubot Baseball Campfire bot</h2>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+      </header>
+
+      <section id="downloads">
+        <span class="inner">
+          <a href="https://github.com/dthyresson/eucker/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/dthyresson/eucker/tarball/master" class="tgz"><em>download</em> .TGZ</a>
+        </span>
+      </section>
+
+
+      <span class="banner-fix"></span>
+
+
+      <section id="main_content">
+        <h1>
+<a name="eucker" class="anchor" href="#eucker"><span class="octicon octicon-link"></span></a>Eucker</h1>
+
+<p>Eucker is a set of scripts for <a href="http://hubot.github.com/">Hubot</a>, a version of GitHub's Campfire bot, that responds to Major League Baseball requests to return scores, boxscores, stats and other tidbits of baseball info to sprinkle into your workday.</p>
+
+<p>He's inspired by <a href="http://en.wikipedia.org/wiki/Bob_Uecker">Bob Eucker</a>, a retired American Major League Baseball player, later a sportscaster, comedian and actor. Uecker was given the title of "Mr. Baseball" by TV talk show host Johnny Carson. </p>
+
+<p>He made lots of Miller Light Ads in the early 1980's.</p>
+
+<p><a href="http://www.youtube.com/watch?v=mUPeO0MbBgc"><img src="http://img.youtube.com/vi/mUPeO0MbBgc/0.jpg" alt="Miller Light Ads"></a></p>
+
+<p>And became immortalized in the classic film Major League with this quote:</p>
+
+<p><a href="http://www.youtube.com/watch?v=dalrphHivOs"><img src="http://img.youtube.com/vi/dalrphHivOs/0.jpg" alt="Just a Bit Outside"></a></p>
+
+<p>Oh, he also played the dad in 80's sitcom, Mr. Belvedere.  </p>
+
+<h2>
+<a name="what-can-eucker-do" class="anchor" href="#what-can-eucker-do"><span class="octicon octicon-link"></span></a>What can Eucker do?</h2>
+
+<p>He can respond to 'natural language-like' queries with baseball game and stat updates within your Campfire room.</p>
+
+<p><img src="https://github.com/dthyresson/eucker/raw/master/images/eucker_score_example1.png" alt="Example 1" title="Example 1"></p>
+
+<p><strong>Question:</strong> Did a team win or lose on a given date?</p>
+
+<p><strong>Usage:</strong> hubot did the red sox win on April 19th 2013?</p>
+
+<p><strong>Question:</strong> Ascii Table Boxscore for the game played by the given team on a specified date</p>
+
+<p><strong>Usage:</strong> hubot box me red sox on April 19th 2013</p>
+
+<p><strong>Question:</strong> Lists a game's events</p>
+
+<p><strong>Usage:</strong> hubot events red sox on April 19th 2013</p>
+
+<p><img src="https://github.com/dthyresson/eucker/raw/master/images/eucker_video_example1.png" alt="Video Example 1" title="Video Example 1"></p>
+
+<p><strong>Question:</strong> Random video highlight for a date</p>
+
+<p><strong>Usage:</strong> hubot highlights for October 8th 2013</p>
+
+<p><strong>Question:</strong> Random video highlight for a game played by the specified team for a given date</p>
+
+<p><strong>Usage:</strong> hubot highlight red sox for October 8th 2013</p>
+
+<p>Since he understands dates like "today" or "yesterday" last Tuesday" or "next Friday" or "on may 11 2013", your inquiries can sounded human.</p>
+
+<p>Eucker's capabilities will be expanded during <a href="http://www.baseballhackday.com/boston/">Baseball Hackday - Boston</a> which takes place March 2nd 2014, 9:30am – 6pm.</p>
+
+<h2>
+<a name="why-eucker" class="anchor" href="#why-eucker"><span class="octicon octicon-link"></span></a>Why Eucker?</h2>
+
+<p>Eucker is a project for Baseball Hackday for <a href="http://www.baseballhackday.com/boston/">Baseball Hackday - Boston</a> which takes place March 2nd 2014, 9:30am – 6pm.</p>
+
+<h2>
+<a name="using-eucker" class="anchor" href="#using-eucker"><span class="octicon octicon-link"></span></a>Using Eucker</h2>
+
+<h3>
+<a name="commands" class="anchor" href="#commands"><span class="octicon octicon-link"></span></a>Commands</h3>
+
+<p>TODO: Final Commands</p>
+
+<h3>
+<a name="mlb-gameday-structure" class="anchor" href="#mlb-gameday-structure"><span class="octicon octicon-link"></span></a>MLB Gameday Structure</h3>
+
+<p>TODO</p>
+
+<h2>
+<a name="acknowledgements" class="anchor" href="#acknowledgements"><span class="octicon octicon-link"></span></a>Acknowledgements</h2>
+
+<h3>
+<a name="mlb-gameday-and-terms-of-use" class="anchor" href="#mlb-gameday-and-terms-of-use"><span class="octicon octicon-link"></span></a>MLB Gameday and Terms of Use</h3>
+
+<p>These scripts access MLB Gameday data which is copyrighted by MLB Advanced Media, L.P.  Use of any content acknowledges agreement to the terms posted here <a href="http://gdx.mlb.com/components/copyright.txt">http://gdx.mlb.com/components/copyright.txt</a></p>
+
+<h3>
+<a name="hubot" class="anchor" href="#hubot"><span class="octicon octicon-link"></span></a>Hubot</h3>
+
+<p><a href="http://hubot.github.com/">Hubot</a>  is your company's robot. Install him in your company to dramatically improve and reduce employee efficiency. <a href="http://hubot.github.com/">Hubot</a> </p>
+
+<h1>
+<a name="installing-eucker-on-hubot" class="anchor" href="#installing-eucker-on-hubot"><span class="octicon octicon-link"></span></a>Installing Eucker on Hubot</h1>
+
+<p>Eucker is built on a version of GitHub's Campfire bot, hubot. He's pretty cool.</p>
+
+<p>This version is designed to be deployed on <a href="http://www.heroku.com">Heroku</a>. This README was generated for you by hubot to help get you started. Definitely update and improve to talk about your own instance, how to use and deploy, what functionality he has, etc!</p>
+
+<h3>
+<a name="testing-hubot-locally" class="anchor" href="#testing-hubot-locally"><span class="octicon octicon-link"></span></a>Testing Hubot Locally</h3>
+
+<p>You can test your hubot by running the following.</p>
+
+<pre><code>% bin/hubot
+</code></pre>
+
+<p>You'll see some start up output about where your scripts come from and a
+prompt.</p>
+
+<pre><code>[Sun, 04 Dec 2011 18:41:11 GMT] INFO Loading adapter shell
+[Sun, 04 Dec 2011 18:41:11 GMT] INFO Loading scripts from /home/tomb/Development/hubot/scripts
+[Sun, 04 Dec 2011 18:41:11 GMT] INFO Loading scripts from /home/tomb/Development/hubot/src/scripts
+Hubot&gt;
+</code></pre>
+
+<p>Then you can interact with hubot by typing <code>hubot help</code>.</p>
+
+<pre><code>Hubot&gt; hubot help
+
+Hubot&gt; animate me &lt;query&gt; - The same thing as `image me`, except adds a few
+convert me &lt;expression&gt; to &lt;units&gt; - Convert expression to given units.
+help - Displays all of the help commands that Hubot knows about.
+...
+</code></pre>
+
+<h3>
+<a name="scripting" class="anchor" href="#scripting"><span class="octicon octicon-link"></span></a>Scripting</h3>
+
+<p>Take a look at the scripts in the <code>./scripts</code> folder for examples.
+Delete any scripts you think are useless or boring.  Add whatever functionality you
+want hubot to have. Read up on what you can do with hubot in the <a href="https://github.com/github/hubot/blob/master/docs/scripting.md">Scripting Guide</a>.</p>
+
+<h3>
+<a name="redis-persistence" class="anchor" href="#redis-persistence"><span class="octicon octicon-link"></span></a>Redis Persistence</h3>
+
+<p>If you are going to use the <code>redis-brain.coffee</code> script from <code>hubot-scripts</code>
+(strongly suggested), you will need to add the Redis to Go addon on Heroku which requires a verified
+account or you can create an account at <a href="https://redistogo.com/">Redis to Go</a> and manually
+set the <code>REDISTOGO_URL</code> variable.</p>
+
+<pre><code>% heroku config:add REDISTOGO_URL="..."
+</code></pre>
+
+<p>If you don't require any persistence feel free to remove the
+<code>redis-brain.coffee</code> from <code>hubot-scripts.json</code> and you don't need to worry
+about redis at all.</p>
+
+<h2>
+<a name="adapters" class="anchor" href="#adapters"><span class="octicon octicon-link"></span></a>Adapters</h2>
+
+<p>Adapters are the interface to the service you want your hubot to run on. This
+can be something like Campfire or IRC. There are a number of third party
+adapters that the community have contributed. Check
+<a href="https://github.com/github/hubot/blob/master/docs/adapters.md">Hubot Adapters</a> for the available ones.</p>
+
+<p>If you would like to run a non-Campfire or shell adapter you will need to add
+the adapter package as a dependency to the <code>package.json</code> file in the
+<code>dependencies</code> section.</p>
+
+<p>Once you've added the dependency and run <code>npm install</code> to install it you can
+then run hubot with the adapter.</p>
+
+<pre><code>% bin/hubot -a &lt;adapter&gt;
+</code></pre>
+
+<p>Where <code>&lt;adapter&gt;</code> is the name of your adapter without the <code>hubot-</code> prefix.</p>
+
+<h2>
+<a name="hubot-scripts" class="anchor" href="#hubot-scripts"><span class="octicon octicon-link"></span></a>hubot-scripts</h2>
+
+<p>There will inevitably be functionality that everyone will want. Instead
+of adding it to hubot itself, you can submit pull requests to
+<a href="https://github.com/github/hubot-scripts">hubot-scripts</a>.</p>
+
+<p>To enable scripts from the hubot-scripts package, add the script name with
+extension as a double quoted string to the <code>hubot-scripts.json</code> file in this
+repo.</p>
+
+<h2>
+<a name="external-scripts" class="anchor" href="#external-scripts"><span class="octicon octicon-link"></span></a>external-scripts</h2>
+
+<p>Tired of waiting for your script to be merged into <code>hubot-scripts</code>? Want to
+maintain the repository and package yourself? Then this added functionality
+maybe for you!</p>
+
+<p>Hubot is now able to load scripts from third-party <code>npm</code> packages! To enable
+this functionality you can follow the following steps.</p>
+
+<ol>
+<li>Add the packages as dependencies into your <code>package.json</code>
+</li>
+<li>
+<code>npm install</code> to make sure those packages are installed</li>
+</ol><p>To enable third-party scripts that you've added you will need to add the package
+name as a double quoted string to the <code>external-scripts.json</code> file in this repo.</p>
+
+<h2>
+<a name="deployment" class="anchor" href="#deployment"><span class="octicon octicon-link"></span></a>Deployment</h2>
+
+<pre><code>% heroku create --stack cedar
+% git push heroku master
+% heroku ps:scale app=1
+</code></pre>
+
+<p>If your Heroku account has been verified you can run the following to enable
+and add the Redis to Go addon to your app.</p>
+
+<pre><code>% heroku addons:add redistogo:nano
+</code></pre>
+
+<p>If you run into any problems, checkout Heroku's <a href="http://devcenter.heroku.com/articles/node-js">docs</a>.</p>
+
+<p>You'll need to edit the <code>Procfile</code> to set the name of your hubot.</p>
+
+<p>More detailed documentation can be found on the
+<a href="https://github.com/github/hubot/blob/master/docs/deploying/heroku.md">deploying hubot onto Heroku</a> wiki page.</p>
+
+<h3>
+<a name="deploying-to-unix-or-windows" class="anchor" href="#deploying-to-unix-or-windows"><span class="octicon octicon-link"></span></a>Deploying to UNIX or Windows</h3>
+
+<p>If you would like to deploy to either a UNIX operating system or Windows.
+Please check out the <a href="https://github.com/github/hubot/blob/master/docs/deploying/unix.md">deploying hubot onto UNIX</a> and
+<a href="https://github.com/github/hubot/blob/master/docs/deploying/unix.md">deploying hubot onto Windows</a> wiki pages.</p>
+
+<h2>
+<a name="campfire-variables" class="anchor" href="#campfire-variables"><span class="octicon octicon-link"></span></a>Campfire Variables</h2>
+
+<p>If you are using the Campfire adapter you will need to set some environment
+variables. Refer to the documentation for other adapters and the configuraiton
+of those, links to the adapters can be found on <a href="https://github.com/github/hubot/blob/master/docs/adapters.md">Hubot Adapters</a>.</p>
+
+<p>Create a separate Campfire user for your bot and get their token from the web
+UI.</p>
+
+<pre><code>% heroku config:add HUBOT_CAMPFIRE_TOKEN="..."
+</code></pre>
+
+<p>Get the numeric IDs of the rooms you want the bot to join, comma delimited. If
+you want the bot to connect to <code>https://mysubdomain.campfirenow.com/room/42</code> 
+and <code>https://mysubdomain.campfirenow.com/room/1024</code> then you'd add it like this:</p>
+
+<pre><code>% heroku config:add HUBOT_CAMPFIRE_ROOMS="42,1024"
+</code></pre>
+
+<p>Add the subdomain hubot should connect to. If you web URL looks like
+<code>http://mysubdomain.campfirenow.com</code> then you'd add it like this:</p>
+
+<pre><code>% heroku config:add HUBOT_CAMPFIRE_ACCOUNT="mysubdomain"
+</code></pre>
+
+<h2>
+<a name="restart-the-bot" class="anchor" href="#restart-the-bot"><span class="octicon octicon-link"></span></a>Restart the bot</h2>
+
+<p>You may want to get comfortable with <code>heroku logs</code> and <code>heroku restart</code>
+if you're having issues.</p>
+      </section>
+
+      <footer>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <p>this project by <a href="https://github.com/dthyresson">dthyresson</a> can be found on <a href="https://github.com/dthyresson/eucker">GitHub</a></p>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+        <p>Generated with <a href="http://pages.github.com">GitHub Pages</a> using Merlot</p>
+        <span class="octocat"></span>
+      </footer>
+
+    </div>
+
+    
+  </body>
+</html>
